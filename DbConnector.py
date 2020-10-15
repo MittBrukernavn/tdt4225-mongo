@@ -1,5 +1,6 @@
 from pymongo import MongoClient, version
 
+from urllib.parse import quote
 
 class DbConnector:
     """
@@ -14,9 +15,9 @@ class DbConnector:
 
     def __init__(self,
                  DATABASE='Geolife',
-                 HOST="tdt4225-20.idi.ntnu.no",
-                 USER="TEST_USER",
-                 PASSWORD="test123"):
+                 HOST='tdt4225-20.idi.ntnu.no',
+                 USER='PequeñaPerra',
+                 PASSWORD=quote('@ZDL5Dd0vff29&VS^87Zhn1m3dOHFAUmn62!hwIEpBR0Eh2njCfW4')):
         uri = "mongodb://%s:%s@%s/%s" % (USER, PASSWORD, HOST, DATABASE)
         # Connect to the databases
         try:

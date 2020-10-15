@@ -32,7 +32,6 @@ class Part1:
             user_id = user['id']
             has_labels = user['has_labels']
             user['activities'] = self.get_activities(user_id, has_labels)
-        
         return users
     
     def get_activities(self, user_id, has_labels):
@@ -57,11 +56,11 @@ class Part1:
                 continue
             activity['trackpoints'] = trackpoints
             transport_mode = None
-            start_date, start_time = trackpoints[0]['date'], trackpoints[0]['time']
-            end_date, end_time = trackpoints[-1]['date'], trackpoints[-1]['time']
-            if f'{start_date} {start_time}' in labels:
-                end_date_and_time, mode = labels[f'{start_date} {start_time}']
-                if end_date_and_time == f'{end_date} {end_time}':
+            start_datetime = trackpoints[0]['datetime']
+            end_datetime = trackpoints[-1]['datetime']
+            if start_datetime in labels:
+                labeled_end_datetime, mode = labels[start_datetime]
+                if labeled_end_datetime == end_datetime:
                     transport_mode = mode
             activity['transportation_mode'] = transport_mode
             activities.append(activity)
@@ -94,8 +93,17 @@ def main():
     program = None
     try:
         program = Part1()
+        print('Creating user collection')
+        # program.create_coll('User')
+        print('Generating users (this might take a while)')
+        users = program.get_users()
+        print('Inserting users to database (this **will** take a while)')
+        program.insert_documents('User', users)
     except Exception as e:
         print("ERROR:", e)
     finally:
         if program:
             program.connection.close_connection()
+
+if __name__ == '__main__':
+    main()
