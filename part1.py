@@ -1,5 +1,6 @@
 from DbConnector import DbConnector
 from os import walk, getcwd
+from datetime import datetime
 
 class Part1:
     def __init__(self):
@@ -13,7 +14,7 @@ class Part1:
     
     def insert_documents(self, collection_name, docs):
         self.db[collection_name].insert_many(docs)
-    
+
     def get_users(self):
         working_directory = getcwd()
         _, user_ids, _ = next(walk(f'{working_directory}/dataset/Data'))
@@ -82,7 +83,7 @@ class Part1:
                     'lon': lon,
                     'alt': alt,
                     'date_days': date_days,
-                    'datetime': f'{date} {time}'
+                    'datetime': datetime.strptime(f'{date} {time}', '%Y-%m-%d %H:%M:%S')
                 })
             return points
 
