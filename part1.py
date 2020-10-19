@@ -27,7 +27,7 @@ class Part1:
         with open(f'{working_directory}/dataset/labeled_ids.txt') as f:
             for line in f:
                 # make sure our logic works (would fail e.g. if some person IDs are missing)
-                assert line.strip() == users[int(line)]['id']
+                assert line.strip() == users[int(line)]['_id']
                 users[int(line)]['has_labels'] = True
         
         for user in users:
@@ -94,10 +94,6 @@ class Part1:
         user_data = []
         activity_data = []
         trackpoint_data = []
-        print('Creating collections')
-        self.create_coll('User')
-        self.create_coll('Activity')
-        self.create_coll('Trackpoint')
         print('Generating users (this might take a while)')
         users = self.get_users()
         for user in users:
@@ -113,9 +109,15 @@ class Part1:
                 activity_data.append(activity)
             del user['activities']
             user_data.append(user)
-        print('Inserting users to database (this **will** take a while)')
+        print('Creating collections')
+        self.create_coll('User')
+        self.create_coll('Activity')
+        self.create_coll('Trackpoint')
+        print('Inserting users to database')
         self.insert_documents('User', user_data)
+        print('Inserting activities to database')
         self.insert_documents('Activity', activity_data)
+        print('Inserting trackpoints to database (this will take a while)')
         self.insert_documents('Trackpoint', trackpoint_data)
 
 
