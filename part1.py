@@ -7,6 +7,7 @@ class Part1:
         self.connection = DbConnector()
         self.client = self.connection.client
         self.db = self.connection.db
+        self.activity_id_counter = 0
 
     def create_coll(self, collection_name):
         collection = self.db.create_collection(collection_name)
@@ -21,7 +22,7 @@ class Part1:
 
         user_ids.sort()
     
-        users = [{ 'id': user_id, 'has_labels': False } for user_id in user_ids]
+        users = [{ '_id': user_id, 'has_labels': False } for user_id in user_ids]
 
         with open(f'{working_directory}/dataset/labeled_ids.txt') as f:
             for line in f:
@@ -30,7 +31,7 @@ class Part1:
                 users[int(line)]['has_labels'] = True
         
         for user in users:
-            user_id = user['id']
+            user_id = user['_id']
             has_labels = user['has_labels']
             user['activities'] = self.get_activities(user_id, has_labels)
         return users
@@ -50,6 +51,8 @@ class Part1:
         activities = []
         for filename in activity_filenames:
             activity = {}
+            activity['_id'] = self.activity_id_counter
+            self.activity_id_counter += 1
             trackpoints = None
             try:
                 trackpoints = self.get_trackpoints(user_id, filename)
@@ -83,23 +86,44 @@ class Part1:
                     'lon': lon,
                     'alt': alt,
                     'date_days': date_days,
-                    'datetime': datetime.strptime(f'{date} {time}', '%Y-%m-%d %H:%M:%S')
+                    'datetime': f'{date} {time}',
                 })
             return points
-
-
+    
+    def generate_and_insert_data(self):
+        user_data = []
+        activity_data = []
+        trackpoint_data = []
+        print('Creating collections')
+        self.create_coll('User')
+        self.create_coll('Activity')
+        self.create_coll('Trackpoint')
+        print('Generating users (this might take a while)')
+        users = self.get_users()
+        for user in users:
+            user_id = user['_id']
+            for activity in user['activities']:
+                activity['user_id'] = user_id
+                activity_id = activity['_id']
+                for trackpoint in activity['trackpoints']:
+                    trackpoint['activity_id'] = activity_id
+                    trackpoint['datetime'] = datetime.strptime(trackpoint['datetime'], '%Y-%m-%d %H:%M:%S')
+                    trackpoint_data.append(trackpoint)
+                del activity['trackpoints']
+                activity_data.append(activity)
+            del user['activities']
+            user_data.append(user)
+        print('Inserting users to database (this **will** take a while)')
+        self.insert_documents('User', user_data)
+        self.insert_documents('Activity', activity_data)
+        self.insert_documents('Trackpoint', trackpoint_data)
 
 
 def main():
     program = None
     try:
         program = Part1()
-        print('Creating user collection')
-        # program.create_coll('User')
-        print('Generating users (this might take a while)')
-        users = program.get_users()
-        print('Inserting users to database (this **will** take a while)')
-        program.insert_documents('User', users)
+        program.generate_and_insert_data()
     except Exception as e:
         print("ERROR:", e)
     finally:
