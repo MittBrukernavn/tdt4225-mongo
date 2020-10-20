@@ -11,17 +11,16 @@ class Part2:
         self.activityCollection = self.db['Activity']
         self.trackpointCollection = self.db['Trackpoint']
     
-    # based on function from example.py
-    def fetch_documents(self, collection_name):
-        collection = self.db[collection_name]
-        documents = collection.find({})
-        return documents
-    
     def task1(self):
         user_count = self.userCollection.count_documents({})
         activity_count = self.activityCollection.count_documents({})
         trackpoint_count = self.trackpointCollection.count_documents({})
         print("User count:", user_count, "| Activity count:", activity_count, "| Trackpoint count:", trackpoint_count)
+
+    def task4(self):
+        # finds unique user ids in activities where transporation_mode is 'taxi'
+        for user_id in self.activityCollection.find({'transportation_mode': 'taxi'}, {'user_id': 1, '_id': 0}).distinct('user_id'):
+            print(user_id)
 
     def task5(self):
         # map and reduce, see https://api.mongodb.com/python/current/examples/aggregation.html
@@ -54,6 +53,9 @@ def main():
 
         print("\nQuery 1:\n")
         program.task1()
+
+        print("\nQuery 4:\n")
+        program.task4()
 
         print("\nQuery 5:\n")
         program.task5()
