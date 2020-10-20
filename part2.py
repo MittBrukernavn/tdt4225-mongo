@@ -11,13 +11,18 @@ class Part2:
     
     def task1(self):
         user_count = self.userCollection.count_documents({})
-        print("User count: ", user_count)
+        activity_count = self.activityCollection.count_documents({})
+        trackpoint_count = self.trackpointCollection.count_documents({})
+        print("User count:", user_count, "| Activity count:", activity_count, "| Trackpoint count: ", trackpoint_count)
 
 def main():
-    # program = None
     try:
         program = Part2()
+        print("Part 2: Queries")
+
+        print("Query 1:")
         program.task1()
+
     except Exception as e:
         print("ERROR:", e)
     finally:
