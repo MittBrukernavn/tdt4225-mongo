@@ -24,7 +24,6 @@ class Part2:
         avg = activity_count/user_count
 
         # TODO: do they want avg activity per unique user?
-
         # avg = self.activityCollection.aggregate([{"$group" : {"_id": "$user_id", "num_activities": {"$sum": 1}}}])
         # below does that in mongodb console 
         # db.Activity.aggregate([{$group: {_id: "$user_id", num_activities: {$sum: 1}}}])
@@ -61,6 +60,7 @@ class Part2:
 
     def task6a(self):
         # 6. a) Find the year with the most activities.
+        query = self.trackpointCollection.aggregate()
         print("")
 
     def task6b(self):
@@ -117,8 +117,11 @@ def main():
         print("\nQuery 5:\n")
         # program.task5()
 
-        print("\nQuery 6:\n")
-        program.task6()
+        print("\nQuery 6a:\n")
+        program.task6a()
+
+        print("\nQuery 6b:\n")
+        program.task6a()
 
         print("\nQuery 7:\n")
         program.task7()
