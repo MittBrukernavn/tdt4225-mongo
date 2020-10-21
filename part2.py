@@ -60,37 +60,43 @@ class Part2:
             pprint(document)
 
     def task6a(self):
-    # 6. a) Find the year with the most activities.
+        # 6. a) Find the year with the most activities.
+        print("")
 
     def task6b(self):
-    #b) Is this also the year with most recorded hours?
-
+        #b) Is this also the year with most recorded hours?
+        print("")
 
     def task7(self):
-    # Find the total distance (in km) walked in 2008, by user with id=112.
+        # Find the total distance (in km) walked in 2008, by user with id=112.
+        print("")
 
     def task8(self):
-    # Find the top 20 users who have gained the most altitude meters.
-        # Output should be a field with (id, total meters gained per user).
-        # Remember that some altitude-values are invalid
-        # Tip: ∑(tp n.altitude − tp .altitude), tp .altitude p .altitude n−1 n > t n−1
+        # Find the top 20 users who have gained the most altitude meters.
+            # Output should be a field with (id, total meters gained per user).
+            # Remember that some altitude-values are invalid
+            # Tip: ∑(tp n.altitude − tp .altitude), tp .altitude p .altitude n−1 n > t n−1
+        print("")
 
     def task9(self):
-    # Find all users who have invalid activities, and the number of invalid activities per user
-        # An invalid activity is defined as an activity with consecutive trackpoints
-        # where the timestamps deviate with at least 5 minutes.
+        # Find all users who have invalid activities, and the number of invalid activities per user
+            # An invalid activity is defined as an activity with consecutive trackpoints
+            # where the timestamps deviate with at least 5 minutes.
+        print("")
 
     def task10(self):
-    # Find the users who have tracked an activity in the Forbidden City of Beijing.
-        # In this question you can consider the Forbidden City to have coordinates
-        # that correspond to: lat 39.916, lon 116.397.
+        # Find the users who have tracked an activity in the Forbidden City of Beijing.
+            # In this question you can consider the Forbidden City to have coordinates
+            # that correspond to: lat 39.916, lon 116.397.
+        print("")
 
     def task11(self):
-    #Find all users who have registered transportation_mode and their most used transportation_mode.
-        # The answer should be on format (user_id, most_used_transportation_mode) sorted on user_id.
-        # Some users may have the same number of activities tagged with e.g. walk and car. 
-        # In this case it is up to you to decide which transportation mode to include in your answer (choose one).
-        # Do not count the rows where the mode is null.
+        #Find all users who have registered transportation_mode and their most used transportation_mode.
+            # The answer should be on format (user_id, most_used_transportation_mode) sorted on user_id.
+            # Some users may have the same number of activities tagged with e.g. walk and car. 
+            # In this case it is up to you to decide which transportation mode to include in your answer (choose one).
+            # Do not count the rows where the mode is null.
+        print("")
 
 
 
