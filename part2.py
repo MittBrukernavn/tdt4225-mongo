@@ -59,6 +59,41 @@ class Part2:
         for document in transportation_modes.find().sort("value", -1):
             pprint(document)
 
+    def task6a(self):
+    # 6. a) Find the year with the most activities.
+
+    def task6b(self):
+    #b) Is this also the year with most recorded hours?
+
+
+    def task7(self):
+    # Find the total distance (in km) walked in 2008, by user with id=112.
+
+    def task8(self):
+    # Find the top 20 users who have gained the most altitude meters.
+        # Output should be a field with (id, total meters gained per user).
+        # Remember that some altitude-values are invalid
+        # Tip: ∑(tp n.altitude − tp .altitude), tp .altitude p .altitude n−1 n > t n−1
+
+    def task9(self):
+    # Find all users who have invalid activities, and the number of invalid activities per user
+        # An invalid activity is defined as an activity with consecutive trackpoints
+        # where the timestamps deviate with at least 5 minutes.
+
+    def task10(self):
+    # Find the users who have tracked an activity in the Forbidden City of Beijing.
+        # In this question you can consider the Forbidden City to have coordinates
+        # that correspond to: lat 39.916, lon 116.397.
+
+    def task11(self):
+    #Find all users who have registered transportation_mode and their most used transportation_mode.
+        # The answer should be on format (user_id, most_used_transportation_mode) sorted on user_id.
+        # Some users may have the same number of activities tagged with e.g. walk and car. 
+        # In this case it is up to you to decide which transportation mode to include in your answer (choose one).
+        # Do not count the rows where the mode is null.
+
+
+
 def main():
     try:
         program = Part2()
@@ -75,6 +110,28 @@ def main():
 
         print("\nQuery 5:\n")
         # program.task5()
+
+        print("\nQuery 6:\n")
+        program.task6()
+
+        print("\nQuery 7:\n")
+        program.task7()
+
+        print("\nQuery 8:\n")
+        program.task8()
+
+        print("\nQuery 9:\n")
+        program.task9()
+
+        print("\nQuery 10:\n")
+        program.task10()
+        
+        print("\nQuery 11:\n")
+        program.task11()
+
+
+
+
 
     except Exception as e:
         print("ERROR:", e)
