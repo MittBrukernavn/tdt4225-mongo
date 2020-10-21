@@ -82,10 +82,10 @@ class Part1:
             for line in lines:
                 lat, lon, _, alt, date_days, date, time = line.strip().split(',')
                 points.append({
-                    'lat': lat,
-                    'lon': lon,
-                    'alt': alt,
-                    'date_days': date_days,
+                    'lat': float(lat),
+                    'lon': float(lon),
+                    'alt': int(alt),
+                    'date_days': float(date_days),
                     'datetime': f'{date} {time}',
                 })
             return points
