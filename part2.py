@@ -29,6 +29,25 @@ class Part2:
         # db.Activity.aggregate([{$group: {_id: "$user_id", num_activities: {$sum: 1}}}])
         print("Average activities per users: " + str(avg))
 
+    def task3(self):
+        # Find the top 20 users with the highest number of activities.
+        mapper = Code(""" 
+            function() {
+                emit(this.user_id, 1);
+            }; """)
+        reducer = Code(""" 
+            function (key, val) {
+                let total = 0;
+                for(let i = 0; i < val.length; i++) {
+                    total += val[i];
+                }
+                return total;
+            } """)
+
+        activity_count = self.activityCollection.map_reduce(mapper, reducer, "activity_count_results")
+        for document in activity_count.find().sort("value", -1).limit(20):
+            pprint(document)
+
     def task4(self):
         # finds unique user ids in activities where transporation_mode is 'taxi'
         for user_id in self.activityCollection.find({'transportation_mode': 'taxi'}, {'user_id': 1, '_id': 0}).distinct('user_id'):
@@ -123,23 +142,26 @@ def main():
         program = Part2()
         print("Part 2: Queries \n")
 
-        # print("\nQuery 1:\n")
-        # program.task1()
+        print("\nQuery 1:\n")
+        program.task1()
 
-        # print("\nQuery 2:\n")
-        # program.task2()
+        print("\nQuery 2:\n")
+        program.task2()
 
-        # print("\nQuery 4:\n")
-        # program.task4()
+        print("\nQuery 3:\n")
+        program.task3()
 
-        # print("\nQuery 5:\n")
-        # program.task5()
+        print("\nQuery 4:\n")
+        program.task4()
+
+        print("\nQuery 5:\n")
+        program.task5()
 
         print("\nQuery 6a:\n")
         program.task6a()
 
-        # print("\nQuery 6b:\n")
-        # program.task6b()
+        #print("\nQuery 6b:\n")
+        #program.task6b()
 
         # print("\nQuery 7:\n")
         # program.task7()
