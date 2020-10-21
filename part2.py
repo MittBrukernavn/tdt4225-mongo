@@ -60,8 +60,26 @@ class Part2:
 
     def task6a(self):
         # 6. a) Find the year with the most activities.
-        query = self.trackpointCollection.aggregate()
-        print("")
+        query = list(self.trackpointCollection.aggregate([
+            { '$project':
+                { 
+                    # '_id' : 0, # does not exclude _id from result?
+                    'year' :
+                    { '$year' : '$datetime' },
+                }
+            },
+            { '$group' :
+                { '_id' : 
+                    { 'year' : '$year' },
+                    'count' : 
+                        { '$sum' : 1 }
+                }
+            },
+            { '$sort' : {'count' : -1 }},
+            { '$limit' : 1 }
+        ]))
+
+        print(query)
 
     def task6b(self):
         #b) Is this also the year with most recorded hours?
@@ -105,38 +123,38 @@ def main():
         program = Part2()
         print("Part 2: Queries \n")
 
-        print("\nQuery 1:\n")
-        program.task1()
+        # print("\nQuery 1:\n")
+        # program.task1()
 
-        print("\nQuery 2:\n")
-        program.task2()
+        # print("\nQuery 2:\n")
+        # program.task2()
 
-        print("\nQuery 4:\n")
+        # print("\nQuery 4:\n")
         # program.task4()
 
-        print("\nQuery 5:\n")
+        # print("\nQuery 5:\n")
         # program.task5()
 
         print("\nQuery 6a:\n")
         program.task6a()
 
-        print("\nQuery 6b:\n")
-        program.task6a()
+        # print("\nQuery 6b:\n")
+        # program.task6b()
 
-        print("\nQuery 7:\n")
-        program.task7()
+        # print("\nQuery 7:\n")
+        # program.task7()
 
-        print("\nQuery 8:\n")
-        program.task8()
+        # print("\nQuery 8:\n")
+        # program.task8()
 
-        print("\nQuery 9:\n")
-        program.task9()
+        # print("\nQuery 9:\n")
+        # program.task9()
 
-        print("\nQuery 10:\n")
-        program.task10()
+        # print("\nQuery 10:\n")
+        # program.task10()
         
-        print("\nQuery 11:\n")
-        program.task11()
+        # print("\nQuery 11:\n")
+        # program.task11()
 
 
 
