@@ -49,6 +49,8 @@ class Part2:
             pprint(document)
 
     def task4(self):
+        # Find all users who have taken a taxi.
+
         # finds unique user ids in activities where transporation_mode is 'taxi'
         for user_id in self.activityCollection.find({'transportation_mode': 'taxi'}, {'user_id': 1, '_id': 0}).distinct('user_id'):
             print(user_id)
@@ -125,7 +127,21 @@ class Part2:
         # Find the users who have tracked an activity in the Forbidden City of Beijing.
             # In this question you can consider the Forbidden City to have coordinates
             # that correspond to: lat 39.916, lon 116.397.
-        print("")
+        #print("")
+        # Note: this function only works if 'lon' and 'alt' are float values. Otherwise zero results.
+
+        # gets list of activities
+        forbidden_city_activies = list(self.trackpointCollection.find({
+            'lat': {'$gt': 39.910, '$lt': 39.922},
+            'lon': {'$gt': 116.390 , '$lt': 116.404}
+        }, {'activity_id': 1}).distinct('activity_id'))
+
+        # gets list of distinct users that was in Forbidden City
+        users_in_city = self.activityCollection.find({'_id': {'$in': forbidden_city_activies}}, {'user_id': 1}).distinct('user_id')
+
+        for i in users_in_city:
+            print(i)
+
 
     def task11(self):
         #Find all users who have registered transportation_mode and their most used transportation_mode.
@@ -136,12 +152,11 @@ class Part2:
         print("")
 
 
-
 def main():
     try:
         program = Part2()
         print("Part 2: Queries \n")
-
+        
         print("\nQuery 1:\n")
         program.task1()
 
@@ -159,7 +174,7 @@ def main():
 
         print("\nQuery 6a:\n")
         program.task6a()
-
+       
         #print("\nQuery 6b:\n")
         #program.task6b()
 
@@ -171,9 +186,9 @@ def main():
 
         # print("\nQuery 9:\n")
         # program.task9()
-
-        # print("\nQuery 10:\n")
-        # program.task10()
+       
+        print("\nQuery 10:\n")
+        program.task10()
         
         # print("\nQuery 11:\n")
         # program.task11()
