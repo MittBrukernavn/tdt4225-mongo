@@ -121,7 +121,40 @@ class Part2:
             # Output should be a field with (id, total meters gained per user).
             # Remember that some altitude-values are invalid
             # Tip: ∑(tp n.altitude − tp .altitude), tp .altitude p .altitude n−1 n > t n−1
-        print("")
+        print("This query can take some time...")
+        activities_join_trackpoints = self.activityCollection.aggregate([
+        {
+            '$match': {
+                'trackpoints.alt': {'$ne': '-777'} # eliminates non-valid altitudes
+            }
+        },
+            {
+            '$lookup': {
+                'from': 'Trackpoint',
+                'localField': '_id',
+                'foreignField': 'activity_id',
+                'as': 'trackpoints'
+            }
+        }, {
+            '$project': {'trackpoints.alt': 1, 'user_id': 1}
+        }])
+
+        user_altitude = {}
+
+        for activity in activities_join_trackpoints:
+            trackpoint = activity['trackpoints']
+            heightGained = 0
+            for i in range(len(trackpoint) - 1):
+                if trackpoint[i]['alt'] == '-777': # make sure invalid altitudes are not considered
+                    continue
+                if trackpoint[i]['alt'] < trackpoint[i + 1]['alt']:
+                        heightGained += (trackpoint[i + 1]['alt'] - trackpoint[i]['alt']) * 0.0003048 # foot to meter
+            user_altitude[activity['user_id']] = user_altitude.get(activity['user_id'], 0) + heightGained
+        
+        list_users_altitudes = sorted(list(user_altitude.items()), key=lambda alt: alt[1], reverse=True)[:20]
+        print(('User', 'Altitude gained (km)'))
+        for i in list_users_altitudes:
+            print(i)
 
     def task9(self):
         # Find all users who have invalid activities, and the number of invalid activities per user
@@ -131,7 +164,7 @@ class Part2:
         # added an index (db.Trackpoint.createIndex({'activity_id': 1})) to the collection to make lookup a bit faster. This
         # solution was suggested on the course's Piazza page.
         print("This query can take some time...")
-        activities = self.activityCollection.aggregate([
+        activities_join_trackpoints = self.activityCollection.aggregate([
         {'$lookup': {
             'from': 'Trackpoint',
             'localField': '_id',
@@ -145,7 +178,7 @@ class Part2:
 
         invalid_activities = {}
 
-        for activity in activities:
+        for activity in activities_join_trackpoints:
             trackpoints = activity['trackpoints']
             for i in range(len(trackpoints) - 1):
                 if trackpoints[i + 1]['date_days'] - trackpoints[i]['date_days'] >= 0.00347222222: # 5 minutes measured as a float where 1.0 = 1 day
@@ -161,7 +194,6 @@ class Part2:
         # Find the users who have tracked an activity in the Forbidden City of Beijing.
             # In this question you can consider the Forbidden City to have coordinates
             # that correspond to: lat 39.916, lon 116.397.
-        #print("")
         # Note: this function only works if 'lon' and 'alt' are float values. Otherwise zero results.
 
         # gets list of activities
@@ -218,7 +250,7 @@ def main():
     try:
         program = Part2()
         print("Part 2: Queries \n")
-
+        """ 
         print("\nQuery 1:\n")
         program.task1()
 
@@ -242,19 +274,19 @@ def main():
 
         print("\nQuery 7:\n")
         program.task7()
-
+        """
         print("\nQuery 8:\n")
         program.task8()
-
+        """ 
         print("\nQuery 9:\n")
         program.task9()
-
+        
         print("\nQuery 10:\n")
         program.task10()
         
         print("\nQuery 11:\n")
         program.task11()
-
+        """
     except Exception as e:
         print("ERROR:", e)
     finally:
