@@ -45,6 +45,7 @@ class Part2:
             } """)
 
         activity_count = self.activityCollection.map_reduce(mapper, reducer, "activity_count_results")
+        print(("User id", "Number of activities"))
         for document in activity_count.find().sort("value", -1).limit(20):
             pprint(document)
 
@@ -56,6 +57,10 @@ class Part2:
             print(user_id)
 
     def task5(self):
+        # Find all types of transportation modes and count how many activities that are
+        # tagged with these transportation mode labels. Do not count the rows where the
+        # mode is null.
+
         # map and reduce, see https://api.mongodb.com/python/current/examples/aggregation.html
         
         # emits key value-pairing for transportation modes that are not null
@@ -74,8 +79,9 @@ class Part2:
                 }
                 return total;
             } """)
-
+        
         transportation_modes = self.activityCollection.map_reduce(mapper, reducer, "results")
+        print(("Transportation mode", "Number of activities"))
         for document in transportation_modes.find().sort("value", -1):
             pprint(document)
 
