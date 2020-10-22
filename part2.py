@@ -149,7 +149,35 @@ class Part2:
             # Some users may have the same number of activities tagged with e.g. walk and car. 
             # In this case it is up to you to decide which transportation mode to include in your answer (choose one).
             # Do not count the rows where the mode is null.
-        print("")
+
+        transportation_and_users = self.activityCollection.aggregate([
+            {'$match': {
+                    'transportation_mode': {'$ne': None}
+                }},
+            {'$group': {
+                    '_id': {'user_id': '$user_id', 'most_used_transportation_mode': '$transportation_mode'},
+                    'count': {'$sum': 1}
+                }},
+            {'$sort': {
+                    'count': -1
+                }},
+            {'$group': {
+                    '_id': '$_id.user_id',
+                    'most': {'$first': 'count'},
+                    'most_used_transportation_mode': {'$first': '$_id.most_used_transportation_mode'}
+                }},
+            {'$project': {
+                    'user_id': '$_id',
+                    'most_used_transportation_mode': '$most_used_transportation_mode',
+                    '_id': 0
+                }},
+            {'$sort': {
+                    'user_id': 1
+                }}
+        ])
+
+        for i in transportation_and_users:
+            pprint(i)
 
 
 def main():
@@ -175,23 +203,23 @@ def main():
         print("\nQuery 6a:\n")
         program.task6a()
        
-        #print("\nQuery 6b:\n")
-        #program.task6b()
+        print("\nQuery 6b:\n")
+        program.task6b()
 
-        # print("\nQuery 7:\n")
-        # program.task7()
+        print("\nQuery 7:\n")
+        program.task7()
 
-        # print("\nQuery 8:\n")
-        # program.task8()
+        print("\nQuery 8:\n")
+        program.task8()
 
-        # print("\nQuery 9:\n")
-        # program.task9()
+        print("\nQuery 9:\n")
+        program.task9()
        
         print("\nQuery 10:\n")
         program.task10()
         
-        # print("\nQuery 11:\n")
-        # program.task11()
+        print("\nQuery 11:\n")
+        program.task11()
 
 
 
