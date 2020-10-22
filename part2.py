@@ -121,7 +121,35 @@ class Part2:
         # Find all users who have invalid activities, and the number of invalid activities per user
             # An invalid activity is defined as an activity with consecutive trackpoints
             # where the timestamps deviate with at least 5 minutes.
-        print("")
+
+        # added an index (db.Trackpoint.createIndex({'activity_id': 1})) to the collection to make lookup a bit faster. This
+        # solution was suggested on the course's Piazza page.
+        print("This query can take some time...")
+        activities = self.activityCollection.aggregate([
+        {'$lookup': {
+            'from': 'Trackpoint',
+            'localField': '_id',
+            'foreignField': 'activity_id',
+            'as': 'trackpoints'
+            }
+        }, 
+        {'$project': 
+            {'trackpoints.date_days': 1,'user_id': 1}
+        }])
+
+        invalid_activities = {}
+
+        for activity in activities:
+            trackpoints = activity['trackpoints']
+            for i in range(len(trackpoints) - 1):
+                if trackpoints[i + 1]['date_days'] - trackpoints[i]['date_days'] >= 0.00347222222: # 5 minutes measured as a float where 1.0 = 1 day
+                    invalid_activities[activity['user_id']] = invalid_activities.get(activity['user_id'], 0) + 1 # increases count by 1
+                    break
+
+        list_invalid_activities = list(invalid_activities.items())
+        print(('User', 'Invalid activities'))
+        for i in list_invalid_activities:
+            print(i)
 
     def task10(self):
         # Find the users who have tracked an activity in the Forbidden City of Beijing.
@@ -184,7 +212,7 @@ def main():
     try:
         program = Part2()
         print("Part 2: Queries \n")
-        
+
         print("\nQuery 1:\n")
         program.task1()
 
@@ -214,16 +242,12 @@ def main():
 
         print("\nQuery 9:\n")
         program.task9()
-       
+
         print("\nQuery 10:\n")
         program.task10()
         
         print("\nQuery 11:\n")
         program.task11()
-
-
-
-
 
     except Exception as e:
         print("ERROR:", e)
