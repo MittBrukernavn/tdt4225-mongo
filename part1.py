@@ -84,7 +84,7 @@ class Part1:
                 points.append({
                     'lat': float(lat),
                     'lon': float(lon),
-                    'alt': int(alt),
+                    'alt': float(alt),
                     'date_days': float(date_days),
                     'datetime': f'{date} {time}',
                 })
