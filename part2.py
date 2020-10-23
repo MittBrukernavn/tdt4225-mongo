@@ -111,32 +111,38 @@ class Part2:
     def task6b(self):
         #b) Is this also the year with most recorded hours?
         query = list(self.trackpointCollection.aggregate([
-            { '$project':
-                { 'time_used': 
-                        { '$sum' : 
-                            {'$subtract': 
-                                [{'$max': '$datetime'}, {'$min': '$datetime'}]
-                            }
-                        },
-                    'year' :
-                        { '$year' : '$datetime' },
+            {
+                '$group': 
+                { 
+                    '_id' : '$activity_id' ,
+                    'minValue' : { '$min' : '$datetime' },
+                    'maxValue' : { '$max' : '$datetime' },
+
                 }
             },
-            { '$group' :
-                { '_id' : 
-                    {
-                        'activity_nr': '$activitiy_id',
-                        'year' : '$year' 
+            {
+                '$project':
+                {
+                    'year' : {
+                        '$year' : '$maxValue'
+                    },
+                    'dateDiff': {
+                       '$subtract' : ['$maxValue', '$minValue']
                     }
+                    
                 }
             },
-            { '$sort' : {'count' : -1 }},
-            { '$limit' : 10 }
+            { '$sort' : {'_id' : 1 }}
         ]))
 
+        
         for line in query:
-            print(line)
-        # print(query)
+            thisyear = line['year']
+            print(thisyear)
+
+            print(line['year'])
+
+
 
     def task7(self):
         # Find the total distance (in km) walked in 2008, by user with id=112.
@@ -146,7 +152,7 @@ class Part2:
         # Find the top 20 users who have gained the most altitude meters.
             # Output should be a field with (id, total meters gained per user).
             # Remember that some altitude-values are invalid
-            # Tip: ∑(tp n.altitude − tp .altitude), tp .altitude p .altitude n−1 n > t n−1
+            # Tip: sum(tp n.altitude - tp.altitude), tp.altitude p.altitude n-1 n > t n-1
         print("This query can take some time...")
         activities_join_trackpoints = self.activityCollection.aggregate([
         {
@@ -276,43 +282,42 @@ def main():
     try:
         program = Part2()
         print("Part 2: Queries \n")
-        """ 
-        print("\nQuery 1:\n")
-        program.task1()
+        # print("\nQuery 1:\n")
+        # program.task1()
 
-        print("\nQuery 2:\n")
-        program.task2()
+        # print("\nQuery 2:\n")
+        # program.task2()
 
-        print("\nQuery 3:\n")
-        program.task3()
+        # print("\nQuery 3:\n")
+        # program.task3()
 
-        print("\nQuery 4:\n")
-        program.task4()
+        # print("\nQuery 4:\n")
+        # program.task4()
 
-        print("\nQuery 5:\n")
-        program.task5()
+        # print("\nQuery 5:\n")
+        # program.task5()
 
-        print("\nQuery 6a:\n")
-        program.task6a()
+        # print("\nQuery 6a:\n")
+        # program.task6a()
        
         print("\nQuery 6b:\n")
         program.task6b()
 
         print("\nQuery 7:\n")
         program.task7()
-        """
-        print("\nQuery 8:\n")
-        program.task8()
-        """ 
-        print("\nQuery 9:\n")
-        program.task9()
+
+        # print("\nQuery 8:\n")
+        # program.task8()
+
+        # print("\nQuery 9:\n")
+        # program.task9()
         
-        print("\nQuery 10:\n")
-        program.task10()
+        # print("\nQuery 10:\n")
+        # program.task10()
         
-        print("\nQuery 11:\n")
-        program.task11()
-        """
+        # print("\nQuery 11:\n")
+        # program.task11()
+
     except Exception as e:
         print("ERROR:", e)
     finally:
