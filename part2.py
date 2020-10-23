@@ -83,7 +83,33 @@ class Part2:
 
     def task6b(self):
         #b) Is this also the year with most recorded hours?
-        print("")
+        query = list(self.trackpointCollection.aggregate([
+            { '$project':
+                { 'time_used': 
+                        { '$sum' : 
+                            {'$subtract': 
+                                [{'$max': '$datetime'}, {'$min': '$datetime'}]
+                            }
+                        },
+                    'year' :
+                        { '$year' : '$datetime' },
+                }
+            },
+            { '$group' :
+                { '_id' : 
+                    {
+                        'activity_nr': '$activitiy_id',
+                        'year' : '$year' 
+                    }
+                }
+            },
+            { '$sort' : {'count' : -1 }},
+            { '$limit' : 10 }
+        ]))
+
+        for line in query:
+            print(line)
+        # print(query)
 
     def task7(self):
         # Find the total distance (in km) walked in 2008, by user with id=112.
@@ -135,11 +161,11 @@ def main():
         # print("\nQuery 5:\n")
         # program.task5()
 
-        print("\nQuery 6a:\n")
-        program.task6a()
+        # print("\nQuery 6a:\n")
+        # program.task6a()
 
-        # print("\nQuery 6b:\n")
-        # program.task6b()
+        print("\nQuery 6b:\n")
+        program.task6b()
 
         # print("\nQuery 7:\n")
         # program.task7()
